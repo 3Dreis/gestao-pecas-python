@@ -122,8 +122,80 @@ def remover_peca():
             return
 
     print("Peça não encontrada.")   
+def listar_caixas():
+    print("\n--- CAIXAS FECHADAS ---")
+
+    if not caixas_fechadas:
+        print("Nenhuma caixa fechada ainda.")
+    else:
+        numero_caixa = 1
+
+        for caixa in caixas_fechadas:
+            ids_pecas = []
+
+            for peca in caixa:
+                ids_pecas.append(peca["id"])
+
+            print(
+                f"Caixa {numero_caixa}: "
+                f"IDs: {', '.join(ids_pecas)}"
+            )
+
+            numero_caixa += 1
+
+    print("\n--- CAIXA ATUAL ---")
+
+    if caixa_atual:
+        ids_atuais = []
+
+        for peca in caixa_atual:
+            ids_atuais.append(peca["id"])
+
+        print(
+            f"Peças armazenadas: {len(caixa_atual)} de "
+            f"{CAPACIDADE_CAIXA} | IDs: {', '.join(ids_atuais)}"
+        )
+    else:
+        print("A caixa atual está vazia.")
+
+def gerar_relatorio():
+    total_aprovadas = 0
+    total_reprovadas = 0
+
+    for peca in pecas:
+        if peca["status"] == "Aprovada":
+            total_aprovadas += 1
+        else:
+            total_reprovadas += 1
+
+    caixas_utilizadas = len(caixas_fechadas)
+
+    if caixa_atual:
+        caixas_utilizadas += 1
+
+    print("\n--- RELATÓRIO FINAL ---")
+    print(f"Total de peças cadastradas: {len(pecas)}")
+    print(f"Total de peças aprovadas: {total_aprovadas}")
+    print(f"Total de peças reprovadas: {total_reprovadas}")
+    print(f"Caixas fechadas: {len(caixas_fechadas)}")
+    print(f"Peças na caixa atual: {len(caixa_atual)}")
+    print(f"Quantidade de caixas utilizadas: {caixas_utilizadas}")
+
+    if total_reprovadas > 0:
+        print("\n--- MOTIVOS DE REPROVAÇÃO ---")
+
+        for peca in pecas:
+            if peca["status"] == "Reprovada":
+                motivos = ", ".join(peca["motivos"])
+                print(f"ID {peca['id']}: {motivos}")
+
+
+
 # Menu principal
 while True:
+
+
+
     print("\n=== MENU PRINCIPAL ===")
     print("1. Cadastrar nova peça")
     print("2. Listar peças aprovadas e reprovadas")
@@ -141,13 +213,13 @@ while True:
         listar_pecas()
 
     elif opcao == "3":
-        print("Você escolheu remover uma peça.")
+        remover_peca()  
 
     elif opcao == "4":
-        print("Você escolheu listar as caixas fechadas.")
+        listar_caixas()
 
     elif opcao == "5":
-        print("Você escolheu gerar o relatório final.")
+            gerar_relatorio()
 
     elif opcao == "0":
         print("Programa encerrado.")
